@@ -54,7 +54,8 @@ For the message board we assume:
 - that anyone can post messages there without leaving a trace (e.g., via onion routing)
 - that the board cannot be spammed with messages (e.g., via some mild proof of work)
 - posted messages stay forever and cannot be altered (e.g., via blockchain with signatures)
-Forther, the following techniques will be used:
+
+Further, the following techniques will be used:
 - crypto-secure hashes
 - asymmetric cryptography (public and private key pairs)
 - computational challenges
@@ -62,7 +63,7 @@ Forther, the following techniques will be used:
 - random numbers
 - multi-factor authentication for any digital signatures in order to protect against compromised devices
 
-We believe our algorithm is secure, even under any combion of any of 
+We believe our algorithm is secure, even under any combion of 
 any amount of currupt conspiring groups of nodes of any size.
 
 In case of curruption or conspiracy or both, the algorithm will
@@ -71,7 +72,8 @@ identify with parametric high probability at least one corrupt node.
 
 # How the Algorithm works
 
-The government node (called G henceforth) posts the question on the board.
+The government node (called G henceforth) posts the question on the board. For example:
+
 {"Whom do you want for president: X or Y? [voting_pool:=All_eligible_USA_citizens]"}.sign(G)
 
 G then generates a sorted list LR of pair{random_number,challenge_solved_token}, called "real list". L has length m.
@@ -83,11 +85,14 @@ For each element E in voting_pool the government will then do the following:
 
 3) create two lists KLRE and KLFE of challenge_key. KLRE and KLFE have length m, respectively.
 
-4) copy LRE into list eLRE, in which each element of LRE is encrypted with the respective challenge_key in KLRE
+4) copy LRE into list eLRE, in which each element of LRE is encrypted symmetrically with the respective challenge_key in KLRE
 
-5) copy LFE into list eLFE, in which each element of LFE is encrypted with the respective challenge_key in KLFE
+5) copy LFE into list eLFE, in which each element of LFE is encrypted symmetrically with the respective challenge_key in KLFE
 
 6) post {{shuffle(eLRE,eLFE)}.encrypted(E.public_eligibility_key),E.public_eligibility_key}.signature(G) on the message board.
+
+Remark: Shuffle means that the order in which eLRE and eLFE are stated is random. The lists themselves remain in their priorly identified order.
+Example: eLRE={1,2}, eLFE={3,4}. Then shuffle(eLRE,eLFE) is equally likely to return either {{1,2},{3,4}} or {{3,4},{1,2}}.
 
 Afterwards, G writes a private file in which it lists:
 file_of_G:={LR,for each E in voting_pool{IE,LFE,KLRE,KLFE}}
@@ -114,15 +119,15 @@ Now each node E will do the following:
 
 6) select two random indices ieE1 and ieE2.
 
-7) solve the computational challenge eLE1[ieE1] by cracking the challenge_key, in order to obtain pair{LE1[ieE1],challenge_solved_token}.
+7) solve the computational challenge eLE1[ieE1] by cracking the challenge_key, in order to obtain pair{LE1[ieE1].first,challenge_solved_token}.
 
-8) solve the computational challenge eLE2[ieE2] by cracking the challenge_key, in order to obtain pair{LEe[ieE2],challenge_solved_token}.
+8) solve the computational challenge eLE2[ieE2] by cracking the challenge_key, in order to obtain pair{LEe[ieE2].first,challenge_solved_token}.
 
 9) post each of the following two messages at a random time (thus implying random order) before the Deadline1 passes:
 
-9.1) {{public_E1_anonymous_vote_key,LE1[ieE1],post_index_E1:=post_index++,"legit"}
+9.1) {{public_E1_anonymous_vote_key,LE1[ieE1].first,post_index_E1:=post_index++,"legit"}
 
-9.2) {{public_E2_anonymous_vote_key,LE2[ieE2],post_index_E2:=post_index++,"legit"}
+9.2) {{public_E2_anonymous_vote_key,LE2[ieE2].first,post_index_E2:=post_index++,"legit"}
 
 Make sure to use TOR browser or anything that protects your anonymity.
 Under no circumstances should E sign any message in 9.1 or 9.2 .
@@ -138,7 +143,7 @@ If everything worked out, then everyone waits until Deadline1 passed.
 
 Now each node E will do the following:
 
-10) post each of the following two messages at a random time (thus implying random order) before the Deadline1 passes:
+10) post each of the following two messages at a random time (thus implying random order):
 
 10.1) {{private_E1_secondary_key,LE1[ieE1],post_index_E1,"unlock"}
 
@@ -167,15 +172,15 @@ They can also see whether the same private_anonymous_vote_key has been used twic
 Again, because there is a proof-of-work cost attached to any anonymous messages, the message board will not be spammed beyond the point of recognition.
 Also, using blockchain with signatures, the votes written on the message board remain unalterable for eternaty.
 Furthermore, even if all cryptographic information breaks at some point in the future, the anonymity of all voters remains uncompromised.
-This is because the anonymity stems from steps 9 and 10, where no encryption (other than within TOR browser) is used to conceil anyone's identity.
+This is because the anonymity stems from steps 9 and 10, where no encryption (other then within TOR browser) is used to conceil anyone's identity.
 
 
 # Algorithm Parameters
 The algorithm has a couple of parameters:
 
-m : number of voters.
+n : number of voters.
 
-n : length of the real lists and fake lists.
+m : length of the real lists and fake lists.
 
 s : number of digits of each random_number
 
@@ -187,8 +192,8 @@ c : proof-of-work cost for posting an unsignatured message.
 
 
 # Analysis of Computational Cost
-G must generate m*k*n random numbers and sort a list of roughly size 2*n.
-Each E must solve two computational challenges of difficulty d.
+G must generate m times k times n random numbers and sort a list of roughly size (k+1) times n.
+Each E must solve k+1 computational challenges of difficulty d.
 
 
 # Analysis of Attacks
@@ -200,12 +205,12 @@ A voter or conspring groups of voters could try to crack many computational chal
 If they can identify a definitive member of list L then they can post the messages in step 9 and 10 multiple times in order two gain multiple votes.
 However, when n is sufficiently large and d is reasonably large then they are out of luck to gain enough information to compare the lists and reliably identify an element of L.
 
-If, on the other hand, any voter submits two elements of either LE1 or LE2 then with a probability of (k-1)/k they submit an element from a fake list.
+If, on the other hand, any voter submits two elements of either LE1 or LE2 then with a probability of 1-1/k they submit an element from a fake list.
 Doing so would immediately expose them as currupt. That is because file_of_G shows which lists have been sent to which node E. And assuming that someone else just randomly guessed a correct element from one of your fake lists is beyond reasonable doubt when s is sufficiently large.
 
 G could conspire with voters and tell them the challenge keys.
-But then they have to be careful. If, for instance, some voters submit too many messages in 9 then the index may rise beyond 2 times n.
-Now when G publishes file_of_G and significantly more than n messages from step 9 contain a feasible number from LR then G is found guilty of fraud beyond reasonable doubt and faces legal prosecution.
+But then G has to be careful. If, for instance, some voters submit too many messages in step 9 then the post_index may rise beyond (k+1) times n.
+Now when G publishes file_of_G and significantly more than n messages from step 9 contain a feasible number of LR then G is found guilty of fraud beyond reasonable doubt and faces legal prosecution.
 
 Thus, G must trust the entire group of conspiring voters because any of them could expose G by virtue of posting many messages in 9.
 
