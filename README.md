@@ -56,9 +56,10 @@ This is done by the "host". A host is any member in the pool who wants to ask a 
 
 At the heart of the procedure, the host (e.g., she) will show each voter two lists with random numbers.
 Each voter (e.g., he) will secretly pick one number from each list.
-For example: List A --> picks number 67483758462875937189074189657864377391047587451ß8309
-For example: List B --> picks number 1478902437879232714837245637145463768246356174351418
-he does not know which is the true/fake list. We then crafts two RSA key pairs.
+- For example: List A --> picks number 67483758462875937189074189657864377391047587451ß8309
+- For example: List B --> picks number 1478902437879232714837245637145463768246356174351418
+
+He does not know which is the true/fake list. We then crafts two RSA key pairs.
 He will then make two envelopes and put one public RSA key into each envelope.
 Finally, he puts one of the two above numbers in each envelope and anonymously sends them back to the host.
 
