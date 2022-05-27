@@ -3,14 +3,6 @@
 An algorithm to conduct anonymous votings/ pollings/ opinion studies with billions of authenticated voters.
 In contrast to, e.g., paper voting, it is cryptographically secure and everyone can verify every vote.
 
-
-Two questions are solved:
-1) The oracle problem solution: N distinct human beings hold one authenticated account each. Notice that an authenticated account cannot be anonymous.
-2) The authentication anonymisation procedure: N authenticated accounts are laundered into N anonymous accounts in a 1:1 mapping.
-
-The authentication is based on asymmetric encryption. Our proof-of-concept implementation uses RSA and is merely 1000 LOC.
-The laundering is not based on cryptography but randomness. This makes anonymity unpenetrable, even if you have an oracle that can randomly guess everyone's keys!
-
 Our hope for this algorithm is that it will foster a global direct democratic community in which each individual human has exactly the same voice and the same power.
 This would end corruption, violence, exploitation, and unfairness in general. It would enable the human species to coordinate global solutions to global problems.
 It would counter confirmation bias and misinformation because everyone can ask questions and check what the people really think about a subject.
@@ -20,6 +12,13 @@ Examples could be:
 - Is XYZ a good person? [Ask all vote-eligible citizens of the USA.]
 - Shall we save the climate? [Ask every passport-holder on planet earth.]
 - ...
+
+The techniques that enable the algorithm are the following two:
+1) The oracle problem solution: N distinct human beings hold one authenticated account each. Notice that an authenticated account cannot be anonymous.
+2) The authentication anonymisation procedure: N authenticated accounts are laundered into N anonymous accounts in a 1:1 mapping.
+
+The authentication is based on asymmetric encryption. Our proof-of-concept implementation uses RSA and is merely 1000 LOC.
+The laundering is not based on cryptography but randomness. This makes anonymity unpenetrable, even if you have an oracle that can randomly guess everyone's keys!
 
 In the following two subsections, we describe the two afore-mentioned solution components a bit further.
 
